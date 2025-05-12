@@ -39,7 +39,7 @@ python chatbot.py
 Tarayıcınızda http://localhost:5000 adresine giderek chatbot arayüzünü kullanabilirsiniz
 
 ## Proje Yapısı
-
+```
 film-duygu-analizi-chatbotu/
 ├── chatbot.py
 ├── istatistic.py
@@ -51,7 +51,7 @@ film-duygu-analizi-chatbotu/
 ├── templates/
 │   └── index.html
 ├── dataset.xlsx   
-
+```
 ## Kullanılan Teknolojiler ve Kütüphaneler
 
 - Python
