@@ -41,16 +41,16 @@ Tarayıcınızda http://localhost:5000 adresine giderek chatbot arayüzünü kul
 ## Proje Yapısı
 
 film-duygu-analizi-chatbotu/
-├── chatbot.py                  # Flask uygulaması ve API
-├── istatistic.py              # Model istatistikleri ve değerlendirme
+├── chatbot.py
+├── istatistic.py
 ├── model/
 │   ├── logistic_regression_model.pkl
 │   └── tfidf_vectorizer.pkl
 ├── static/
-│   └── style.css              # Arayüz tasarımı (karanlık mod)
+│   └── style.css
 ├── templates/
-│   └── index.html             # Chatbot arayüzü
-├── dataset.xlsx               # Film yorumları veri seti        
+│   └── index.html
+├── dataset.xlsx   
 
 ## Kullanılan Teknolojiler ve Kütüphaneler
 
