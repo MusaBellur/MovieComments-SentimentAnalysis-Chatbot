@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <title>Film Yorum Chatbotu</title>
     <link rel="stylesheet" href="/static/style.css">
+    <style>
+        .stars {
+            color: gold;
+            margin-top: 4px;
+        }
+    </style>
 </head>
 <body>
     <div class="chat-container">
@@ -16,6 +22,10 @@
     </div>
 
     <script>
+        function renderStars(count) {
+            return "⭐".repeat(count);
+        }
+
         async function sendMessage() {
             const input = document.getElementById("user-input");
             const message = input.value.trim();
@@ -32,7 +42,15 @@
             });
 
             const data = await response.json();
-            chatBox.innerHTML += `<div class="bot">🤖 ${data.sentiment} (Güven: ${data.confidence})</div>`;
+
+            const botMessage = `
+                <div class="bot">
+                    🤖 ${data.sentiment} (Güven: ${data.confidence}%)
+                    <div class="stars">${renderStars(data.stars)}</div>
+                </div>
+            `;
+
+            chatBox.innerHTML += botMessage;
             chatBox.scrollTop = chatBox.scrollHeight;
         }
     </script>

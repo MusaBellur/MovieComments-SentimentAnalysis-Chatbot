@@ -15,7 +15,7 @@ nltk.download('punkt')
 
 # --- Stopwords ve ön işlem fonksiyonu ---
 stop_words = set(stopwords.words('turkish'))
-important_words = {"hiç", "asla", "değil", "kötü", "beğenmedim", "nefret"}
+important_words = {"hiç", "asla", "değil"}
 stop_words -= important_words
 stop_words.add("film")
 
@@ -36,11 +36,11 @@ if not os.path.exists(model_path) or not os.path.exists(vectorizer_path):
     df = pd.read_excel("dataset.xlsx")
     df["clean_text"] = df["comment"].apply(pre_processing)
 
-    X_train, X_test, y_train, y_test = train_test_split(df["clean_text"], df["Label"], test_size=0.1, random_state=42)
+    X_train, X_test, y_train, y_test = train_test_split(df["clean_text"], df["Label"], test_size=0.2, random_state=42)
 
     pipeline = Pipeline([
         ("tfidf", TfidfVectorizer(ngram_range=(1,2))),
-        ("clf", LogisticRegression(max_iter=500))
+        ("clf", LogisticRegression(max_iter=5000))
     ])
 
     param_grid = {
@@ -73,7 +73,26 @@ app = Flask(__name__)
 
 @app.route("/")
 def index():
-    return render_template("index.html")  # index.html dosyası public klasöründe olmalı
+    return render_template("index.html")  # index.html dosyası templates klasöründe olmalı
+
+# --- Yıldız hesaplayan fonksiyon ---
+def get_star_rating(prediction, confidence):
+    confidence *= 100  # yüzdelik hale getir
+    if prediction == 1:
+        if 80 <= confidence <= 100:
+            return 5
+        elif 60 <= confidence < 80:
+            return 4
+        elif 40 <= confidence < 60:
+            return 3
+    else:
+        if 80 <= confidence <= 100:
+            return 1
+        elif 60 <= confidence < 80:
+            return 2
+        elif 40 <= confidence < 60:
+            return 3
+    return 3  # Varsayılan
 
 @app.route("/predict", methods=["POST"])
 def predict():
@@ -85,10 +104,13 @@ def predict():
     confidence = model.predict_proba(vectorized).max()
 
     sentiment = "Pozitif 😊" if prediction == 1 else "Negatif 😞"
+    stars = get_star_rating(prediction, confidence)
+
     return jsonify({
         "text": user_input,
         "sentiment": sentiment,
-        "confidence": round(float(confidence), 2)
+        "confidence": round(float(confidence * 100), 2),
+        "stars": stars
     })
 
 if __name__ == "__main__":
